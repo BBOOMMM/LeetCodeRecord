@@ -15,15 +15,24 @@ class Solution:
         n1, n2, n3 = len(s1), len(s2), len(s3)
         if n1 + n2 != n3:
             return False
-        i, j = 0, 0
-        for k in range(n3):
-            if i < n1 and s1[i] == s3[k]:
-                i += 1
-            elif j < n2 and s2[j] == s3[k]:5
-                j += 1
-            else:
-                return False
-        return True
+        dp = [[False] * (n2 + 1) for _ in range(n1 + 1)]
+        dp[0][0] = True
+        for i in range(1, n1+1):
+            if dp[i-1][0] and s1[i-1]==s3[i-1]:
+                dp[i][0] = True
+        for j in range(1, n2+1):
+            if dp[0][j-1] and s2[j-1]==s3[j-1]:
+                dp[0][j] = True
+        for i in range(1, n1+1):
+            for j in range(1, n2+1):
+                # s1 的前 i 个， s2 的前 j 个
+                # s1 i-1 , s2 j-1
+                # s3 i + j - 1
+                if s1[i-1] == s3[i+j-1] and dp[i-1][j]:
+                    dp[i][j] = True
+                elif s2[j-1] == s3[i+j-1] and dp[i][j-1]:
+                    dp[i][j] = True
+        return dp[n1][n2]
 # @lc code=end
 
 
